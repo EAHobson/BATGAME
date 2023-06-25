@@ -1,0 +1,10 @@
+landmark,landmarkID,x,y,color
+tree,roost1,0,50,green
+tree,roost2,7,27,green
+tree,roost3,5,7,green
+cow,cow1,40,47,darkgrey
+cow,cow2,42,27,darkgrey
+cow,cow3,47,3,darkgrey
+cow,cow4,28,42,darkgrey
+cow,cow5,26,4,darkgrey
+cow,cow6,35,12,darkgrey
