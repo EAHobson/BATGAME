@@ -1285,7 +1285,7 @@ When you played the first two version of the social foraging game, you picked on
 
 In this version of the game, you will play the "Social Foraging" version again. However, this time you will use the first 10 seconds of the game to pick THREE BUDDIES. Once the first 10 seconds have passed, your goals are now to (1) visit the cows to forage, and (2) spend as much time as you can near all three of your buddies.
 
-Play the game, then save your data as "bet_hedge.csv"
+Play the game, then save your data as "bethedge.csv"
 
 
 ## **Q19: Bet-hedging buddies
@@ -1300,10 +1300,10 @@ ADD YOUR ANSWER HERE
 
 Load data & process
 ```{r warning=FALSE}
-bet_hedge.locs <- read_csv("bet_hedge.csv") #this is uploaded by the students #SOCFORG.csv
+bet_hedge.locs <- read_csv("bethedge.csv") #this is uploaded by the students #SOCFORG.csv
 
 #this is backup data in case student data won't run (just delete the "#" from the start of the line below)
-#bet_hedge.locs <- read_csv("example_bet_hedge.csv") 
+#bet_hedge.locs <- read_csv("example_bethedge.csv.csv") 
 
 #rename cols
 colnames(bet_hedge.locs) <- c("times", "agent", "x", "y")
