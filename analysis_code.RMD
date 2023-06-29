@@ -87,7 +87,7 @@ Gerry gives an overview of vampire bats: https://www.youtube.com/watch?v=pk2brNQ
 Video of two vampire bats feeding on a cow at night: https://www.youtube.com/watch?v=lJDq9yjWXSk
 
 
-# More information
+## More vampire bat information & research
 
 **For more information about vampire bat sociality, cooperation, relationship formation, and foraging, see: https://socialbat.org/papers/ 
 
@@ -331,7 +331,6 @@ for (bat in 1:length(ids)) { #bat=1
   
   #compile data & write
   loop.compiled <- cbind.data.frame(batID, 
-                                    distance, 
                                     straightness, 
                                     mean.dirchange)
   
@@ -362,26 +361,10 @@ player <- subset(melted_traj.summs, batID=="Player")
 ```
 
 
-Plot the trajectory data: we'll plot each measure separately and then combine all of them into a multi-panel plot where we can compare all the measures side by side. These plots all show the NPC data with raw points shown in brown circles and the summary of the variability in the NPC data shown as a boxplot. For an overview of boxplots, visit https://www.rforecology.com/post/2022-04-06-how-to-make-a-boxplot-in-r/ and read the section "Boxplot Components". Generally, any points that are higher or lower than the highest and lowest ends of the "whiskers" of the box plot are considered "unusual" and are treated as outliers. For our purposes, you'll want to compare where your data (Player, in red) falls compared to the NPC bats, who are all plotted in red.
+Plot the trajectory data: we'll plot each measure separately and then combine all of them into a multi-panel plot where we can compare all the measures side by side. These plots all show the NPC data with raw points shown in brown circles and the summary of the variability in the NPC data shown as a boxplot. For an overview of boxplots, visit https://www.rforecology.com/post/2022-04-06-how-to-make-a-boxplot-in-r/ and read the section "Boxplot Components". Generally, any points that are higher or lower than the highest and lowest ends of the "whiskers" of the box plot are considered "unusual" and are treated as outliers. The raw data are "jittered" in x-axis space so that points are easier to see and are less likely to overlap.
+
+For our purposes, you'll want to compare where your data (Player, in red) falls compared to the NPC bats, who are all plotted in red.
 ```{r fig2, fig.height = 5, fig.width = 8, fig.cap="Figure: Plot of summary measures of random movements when player goal is to also move randomly."}
-#distance
-player.dist <- player$value[player$type.mm=="distance"]
-dist <- ggplot(NPCs[NPCs$type.mm=="distance",], aes(type.mm, value)) +
-  geom_boxplot(color="saddlebrown", fill="saddlebrown", alpha=0.2, outlier.shape = NA) +
-  geom_jitter(width = 0.3, size=5, pch=21, col="white", bg="saddlebrown") +
-  ylim(0,max(c(NPCs$value[NPCs$type.mm=="distance"]),player$value[player$type.mm=="distance"])) +
-  ggtitle("Distance") + 
-  ylab("Distance") +
-  geom_point(aes(y=player.dist), col="black", bg="red", size=5, pch=23) +
-  theme(plot.title = element_text(hjust = 0.5),
-        axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(),
-        panel.background = element_blank(),
-        panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(),
-        axis.line = element_line(colour = "black"),
-        panel.border = element_rect(colour = "black", fill=NA, linewidth=0.5))
 
 
 #straightness
@@ -425,7 +408,7 @@ dirchange <- ggplot(NPCs[NPCs$type.mm=="mean.dirchange",], aes(type.mm, value)) 
 
 
 # plot all together to compare
-gridExtra::grid.arrange(dist, straightness, dirchange, ncol=4,
+gridExtra::grid.arrange(straightness, dirchange, ncol=4,
                         top=textGrob("Bat trajectories: random movement"))
 
 ```
@@ -581,13 +564,13 @@ ADD YOUR ANSWER HERE
 
 
 ########### 
-# PART 3: SOCIAL FORAGING 
+# PART 3: SOCIAL PREFERENCES 
 ############
 When you played the first two versions of the random movements game, all the NPC bats were programmed to just move randomly around the habitat, without responding to anything in the habitat. Real bats are unlikely to move absolutely randomly around their habitat -- as you noticed in the explore and random games, moving randomly makes it so almost none of the bats actually find a cow. This would be a terrible strategy for a real bat to use because they would be very likely to starve and die. Real bats use a suite of rules to find food, but also to stick with other bats that they have strong relationships with.
 
 For an overview, watch this video of Gerry explaining how they study bats in the wild: https://www.youtube.com/watch?v=BeAiUBM18Cs&t=248s
 
-We are now going to play another version of the game. You'll now choose "Social Foraging" as the movement type (https://eahobson.github.io). In the "Social Foraging" version of the game, the NPC bats have new rules that they use to structure their movements. Each NPC bat is assigned a "buddy". 
+We are now going to play another version of the game. You'll now choose "Social Preferences" as the movement type (https://eahobson.github.io). In the "Social Preferences" version of the game, the NPC bats have new rules that they use to structure their movements. Each NPC bat is assigned a "buddy". 
 
 **NPC bats now have two goals:** they need to find cows to forage on, but they also prefer to forage with their assigned buddy. 
 
@@ -654,13 +637,11 @@ ADD YOUR ANSWER HERE
 
 ## Analyze trajectories
 
-Summarize all trajectories: we'll use the same method we used earlier to measure three aspects of your trajectories, and those of the other bats: distance, staightness of the path, and the mean number of direction changes.
+Summarize all trajectories: we'll use the same method we used earlier to measure two aspects of your trajectories, and those of the other bats: staightness of the path and the mean number of direction changes.
 ```{r}
 #make empty dataframe to write trajectory summaries to
 trajectory.summary <- data.frame(batID=character(),
-                                 distance=double(),
                                  straightness=double(),
-                                 sinosoidy=double(),
                                  mean.dirchange=double())
 # LOOP
 
@@ -680,17 +661,13 @@ for (bat in 1:length(ids)) { #bat=1
   #make trajectory & summarize
   trj <- trajr::TrajFromCoords(loop.data)
   #plot(trj)
-  distance        <- trajr::TrajDistance(trj)
   straightness    <- trajr::TrajStraightness(trj)
-  sinosoidy       <- trajr::TrajSinuosity2(trj)
   mean.dirchange  <- mean(trajr::TrajDirectionalChange(trj))
   batID           <- loop.bat
   
   #compile data & write
   loop.compiled <- cbind.data.frame(batID, 
-                                    distance, 
                                     straightness, 
-                                    sinosoidy, 
                                     mean.dirchange)
   
   trajectory.summary <- rbind.data.frame(trajectory.summary, loop.compiled)
@@ -716,25 +693,6 @@ player <- subset(melted_traj.summs, batID=="Player")
 
 Plot the trajectory data
 ```{r fig7, fig.height = 5, fig.width = 10}
-#distance
-player.dist <- player$value[player$type.mm=="distance"]
-dist <- ggplot(NPCs[NPCs$type.mm=="distance",], aes(type.mm, value)) +
-  geom_boxplot(color="saddlebrown", fill="saddlebrown", alpha=0.2, outlier.shape = NA) +
-  geom_jitter(width = 0.3, size=5, pch=21, col="white", bg="saddlebrown") +
-  ylim(0,max(c(NPCs$value[NPCs$type.mm=="distance"]),player$value[player$type.mm=="distance"])) +
-  ggtitle("Distance") + 
-  ylab("Distance") +
-  geom_point(aes(y=player.dist), col="black", bg="red", size=5, pch=23) +
-  theme(plot.title = element_text(hjust = 0.5),
-        axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(),
-        panel.background = element_blank(),
-        panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(),
-        axis.line = element_line(colour = "black"),
-        panel.border = element_rect(colour = "black", fill=NA, linewidth=0.5))
-
 
 #straightness
 player.straightn <- player$value[player$type.mm=="straightness"]
@@ -777,8 +735,8 @@ dirchange <- ggplot(NPCs[NPCs$type.mm=="mean.dirchange",], aes(type.mm, value)) 
 
 
 # plot all together to compare
-gridExtra::grid.arrange(dist, straightness, dirchange, ncol=4,
-                        top=textGrob("Bat trajectories: social foraging"))
+gridExtra::grid.arrange(straightness, dirchange, ncol=4,
+                        top=textGrob("Bat trajectories: social preferences"))
 
 ```
 
@@ -882,7 +840,7 @@ ggplot(unique.landmarks_cows, aes(x=batID, y=unique.visitsXtype,
   geom_bar(stat="identity") +
   labs(x="Bats", 
        y="Number of cows found", 
-       title = "Bat trajectories: social foraging") +
+       title = "Bat trajectories: social preferences") +
   ## add manual color scale
   scale_fill_manual("legend",         ###### in this call: colour change
                     values = c("Player" = "red", "NPC bats" = "saddlebrown")) +
@@ -900,7 +858,7 @@ ggplot(unique.landmarks_cows, aes(x=batID, y=unique.visitsXtype,
            label= paste0("Number cows found by player = ", n.player.cows))
 ```
 
-## ** Q13: Social foraging success
+## ** Q13: Social preferences foraging success
 
 **How many cows did you visit while foraging?**  
 ```
@@ -919,7 +877,7 @@ ADD YOUR ANSWER HERE
 ADD YOUR ANSWER HERE
 
 ```
-**Is social foraging potentially a successful foraging strategy that you'd expect real bats to use? Why or why not?**
+**Is social preferences foraging potentially a successful foraging strategy that you'd expect real bats to use? Why or why not?**
 ```
 ADD YOUR ANSWER HERE
 
@@ -976,7 +934,7 @@ rmarkdown::paged_table(distance_bats, options = NULL)
 
 # Summarize inter-bat proximities & compare network measures 
 
-Now we'll quantify and plot the social networks for the bats in the social foraging game. These networks will summarize the proximity network, where we'll count the number of times each bat was observed as "near" other bats. The bats will be the "nodes" in the network (plotted as circles) and the proximity observations will be the "edges" (plotted as lines connecting the nodes). The width of each edge will represent how often those two bats were seen in close proximity to each other. Bats that are often seen close together will have wider edges connecting them, bats that are rarely observed close together will have narrow edges connecting them, and bats that are never seen together will not have a connection.
+Now we'll quantify and plot the social networks for the bats in the social preferences game. These networks will summarize the proximity network, where we'll count the number of times each bat was observed as "near" other bats. The bats will be the "nodes" in the network (plotted as circles) and the proximity observations will be the "edges" (plotted as lines connecting the nodes). The width of each edge will represent how often those two bats were seen in close proximity to each other. Bats that are often seen close together will have wider edges connecting them, bats that are rarely observed close together will have narrow edges connecting them, and bats that are never seen together will not have a connection.
 
 We'll used network metrics to quantify two social measures: "degree" and "strength". 
 
@@ -1070,11 +1028,11 @@ plot_strength <- ggplot(NPCs.netsum, aes(5, times.near.others)) +
 
 # plot all together to compare
 gridExtra::grid.arrange(plot_degree, plot_strength, ncol=2,
-                        top=textGrob("Bat trajectories: social foraging"))
+                        top=textGrob("Bat trajectories: social preferences"))
 ```
 
 ## ** Q14: Compare network metrics
-**For social foraging, compare your social measures to the NPC bats. Were you behaving "normally" compared to the other bats? If not, how did your movements cause you to have different social measures than the NPC bats?**
+**For social preferences foraging, compare your social measures to the NPC bats. Were you behaving "normally" compared to the other bats? If not, how did your movements cause you to have different social measures than the NPC bats?**
 ```
 ADD YOUR ANSWER HERE
 
@@ -1088,7 +1046,7 @@ set.seed(42)
 plot(g, 
      edge.width=E(g)$n.near/3,
      edge.color=alpha("black", 0.4),
-     main= "Social foraging proximity network (all near events)", 
+     main= "Social preferences proximity network (all near events)", 
      sub=paste0("Network density = ", round(edge_density(g),2)),
      vertex.size=17,
      vertex.color=V(g)$node.color,
@@ -1131,7 +1089,7 @@ set.seed(42)
 plot(g2, 
      edge.width=E(g2)$n.near/3,
      edge.color=alpha("black", 0.4),
-     main= "Bat trajectories: thresholded social foraging (rare observations removed)", 
+     main= "Bat trajectories: thresholded social preferences (rare observations removed)", 
      #sub=paste0("Network density = ", round(edge_density(g),2)),
      vertex.size=17,
      vertex.color=V(g2)$node.color,
@@ -1179,7 +1137,7 @@ top.assos <- ggplot(top.associate, aes(x=batB, y=n.near, group=1, fill = ifelse(
             fontface = "italic") +
   ylim(0,max.y) + #set y limits for nicer labels
   labs(title="Stongest-preferred associates", 
-       subtitle= "Bat trajectories: social foraging",
+       subtitle= "Bat trajectories: social preferences",
        x="Bats", 
        y="Number observations near favorite") +
   ## add manual color scale
@@ -1242,7 +1200,7 @@ under <- ggplot(player.locs, aes(x, y)) +
   geom_path(colour="red", linewidth=1.5, alpha=0.45) +
   xlim(0,50) +
   ylim(50,0) +
-  labs(title = "Bat trajectories: social foraging, top associates of Player",
+  labs(title = "Bat trajectories: social preferences, top associates of Player",
        subtitle = "Trajectories: Red=Player, Brown=Top associates; roost locations=green, cow locations=grey") +
   #set theme for plots
   theme(aspect.ratio=1,
@@ -1275,9 +1233,9 @@ ADD YOUR ANSWER HERE
 ########### 
 # PART 4: BET-HEDGING
 ########### 
-When you played the first two version of the social foraging game, you picked one bat to be your "buddy" and followed two rules: (1) visit the cows to forage, and (2) try to stick close to your buddy while foraging. In the real world, this strategy of having one very strong friend might be risky: if something happens to your one friend (gets sick, is predated, wanders off, etc.) and you desperately need some food sharing, you wouldn't have any other strong friendships to rely on. Real vampire bats appear to develop several strong friendships, potentially as a way to "bet-hedge" against the risk of the loss of any one friend. Gerry wrote a paper about this and you can find his results here: https://doi.org/10.1098/rsbl.2017.0112.
+When you played the first two version of the social preferences game, you picked one bat to be your "buddy" and followed two rules: (1) visit the cows to forage, and (2) try to stick close to your buddy while foraging. In the real world, this strategy of having one very strong friend might be risky: if something happens to your one friend (gets sick, is predated, wanders off, etc.) and you desperately need some food sharing, you wouldn't have any other strong friendships to rely on. Real vampire bats appear to develop several strong friendships, potentially as a way to "bet-hedge" against the risk of the loss of any one friend. Gerry wrote a paper about this and you can find his results here: https://doi.org/10.1098/rsbl.2017.0112.
 
-In this version of the game, you will play the "Social Foraging" version again. However, this time you will use the first 10 seconds of the game to pick THREE BUDDIES. Once the first 10 seconds have passed, your goals are now to (1) visit the cows to forage, and (2) spend as much time as you can near all three of your buddies.
+In this version of the game, you will play the "Social Preferences" version again. However, this time you will use the first 10 seconds of the game to pick THREE BUDDIES. Once the first 10 seconds have passed, your goals are now to (1) visit the cows to forage, and (2) spend as much time as you can near all three of your buddies.
 
 Play the game, then save your data as "bethedge.csv"
 
@@ -1332,10 +1290,10 @@ Use the locations to find the distances between each bat and all landmarks at ea
       loop.step <- ev10steps[step]
       
       #if no data at that timestep, skip
-      loop.data <- if(nrow(subset(socfor.locs, times==loop.step))<1) next #skip if no data at this ts
+      loop.data <- if(nrow(subset(bet_hedge.locs, times==loop.step))<1) next #skip if no data at this ts
       
       #otherwise, subset the data
-      loop.data <- subset(socfor.locs, times==loop.step)
+      loop.data <- subset(bet_hedge.locs, times==loop.step)
       
       #find distance from bats to all landmarks
       landmark.combos <- merge(loop.data, landmarks.tr)
@@ -1446,9 +1404,9 @@ ADD YOUR ANSWER HERE
     for (step in 1:length(ev10steps)) { #step=41
       loop.step <- ev10steps[step]
       #if no data at that timestep, skip
-      loop.data <- if(nrow(subset(socfor.locs, times==loop.step))<1) next #skip if no data at this ts
+      loop.data <- if(nrow(subset(bet_hedge.locs, times==loop.step))<1) next #skip if no data at this ts
       #otherwise, subset the data
-      loop.data <- subset(socfor.locs, times==loop.step) 
+      loop.data <- subset(bet_hedge.locs, times==loop.step) 
       
       #find distance from each bat to each other bat
       loop.data$joiner <- 1
@@ -1483,7 +1441,7 @@ Now we'll quantify and plot the social networks for the bats in the bet-hedging 
 ```{r}
 # set up attributes
 
-all.bats <- as.data.frame(unique(socfor.locs$batID))
+all.bats <- as.data.frame(unique(bet_hedge.locs$batID))
 colnames(all.bats) <- "batID"
 
 all.bats$node.type <- ifelse(all.bats$batID=="Player", "Player", "NPC Bat")
@@ -1714,7 +1672,7 @@ ADD YOUR ANSWER HERE
 
 # Final questions
 
-```{r socforg, echo=FALSE, fig.cap="For more information, visit http://hobsonresearch.com/index.php/sociality-game/", out.width = '100%'}
+```{r socforg, echo=FALSE, fig.cap="For more information, visit https://doi.org/10.1371/journal.pbio.3001366", out.width = '100%'}
 knitr::include_graphics("socforag.scenarios.png")
 ```
 
