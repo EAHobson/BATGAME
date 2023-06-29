@@ -154,10 +154,7 @@ Play the game, then save your data as "explore.csv"
 The function "read_csv" is what we'll use to import and activate your data. You should see this file to the right of your screen in your file list. Make sure that the file name is exactly "explore" and saved as a .csv file. Any differences in spelling or capitalization will cause an error in importing your data.
 
 ```{r setup, warning=FALSE, class.output="scroll-250"}
-#explore.locs <- read_csv("explore.csv") #this is uploaded by the students
-
-#this is backup data in case student data won't run (just delete the "#" from the start of the line below)
-explore.locs <- read_csv("example_explore.csv") 
+explore.locs <- read_csv("explore.csv") #this is uploaded by the students
 
 
 #rename columns
@@ -244,10 +241,7 @@ Play the game, then save your data as "random.csv"
 
 Load data & process
 ```{r}
-#rand.locs <- read_csv("random.csv") #this is uploaded by the students
-
-#this is backup data in case student data won't run (just delete the "#" from the start of the line below)
-rand.locs <- read_csv("example_random.csv") 
+rand.locs <- read_csv("random.csv") #this is uploaded by the students
 
 
 #rename cols
@@ -606,10 +600,7 @@ Play the game, then save your data as "socforag.csv"
 
 Load data & process
 ```{r warning=FALSE}
-#socfor.locs <- read_csv("socforag.csv") #this is uploaded by the students #SOCFORG.csv
-
-#this is backup data in case student data won't run (just delete the "#" from the start of the line below)
-socfor.locs <- read_csv("example_socforag.csv") 
+socfor.locs <- read_csv("socforag.csv") #this is uploaded by the students #SOCFORG.csv
 
 #rename cols
 colnames(socfor.locs) <- c("times", "agent", "x", "y")
@@ -1023,7 +1014,6 @@ strength <- strength(g, weights=E(g)$n.near)/2
 edge_density(g)
 
 # How social is each bat?
-# add summary for n bats near ("degree") and n times near any bat??? TKTK
 network_summs <- data.frame(batID=V(g)$name, n.bats.near=de, times.near.others=strength)
 
 # view data structure
@@ -1304,10 +1294,8 @@ ADD YOUR ANSWER HERE
 
 Load data & process
 ```{r warning=FALSE}
-#bet_hedge.locs <- read_csv("bethedge.csv") #this is uploaded by the students #SOCFORG.csv
+bet_hedge.locs <- read_csv("bethedge.csv") #this is uploaded by the students #SOCFORG.csv
 
-#this is backup data in case student data won't run (just delete the "#" from the start of the line below)
-bet_hedge.locs <- read_csv("example_bethedge.csv") 
 
 #rename cols
 colnames(bet_hedge.locs) <- c("times", "agent", "x", "y")
@@ -1531,7 +1519,6 @@ strength <- strength(g2, weights=E(g2)$n.near)/2
 edge_density(g2)
 
 # How social is each bat?
-# add summary for n bats near ("degree") and n times near any bat??? TKTK
 network_summs <- data.frame(batID=V(g2)$name, n.bats.near=de, times.near.others=strength)
 
 # view data structure
