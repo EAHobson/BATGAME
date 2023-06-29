@@ -969,7 +969,6 @@ V(g)$node.color <- all.bats[match(V(g)$name, all.bats$batID), "node.color"]
 de <- igraph::degree(g)/2
 strength <- strength(g, weights=E(g)$n.near)/2
 
-edge_density(g)
 
 # How social is each bat?
 network_summs <- data.frame(batID=V(g)$name, n.bats.near=de, times.near.others=strength)
@@ -1047,7 +1046,7 @@ plot(g,
      edge.width=E(g)$n.near/3,
      edge.color=alpha("black", 0.4),
      main= "Social preferences proximity network (all near events)", 
-     sub=paste0("Network density = ", round(edge_density(g),2)),
+     
      vertex.size=17,
      vertex.color=V(g)$node.color,
      vertex.label.family="Arial Black",
@@ -1090,7 +1089,7 @@ plot(g2,
      edge.width=E(g2)$n.near/3,
      edge.color=alpha("black", 0.4),
      main= "Bat trajectories: thresholded social preferences (rare observations removed)", 
-     #sub=paste0("Network density = ", round(edge_density(g),2)),
+     
      vertex.size=17,
      vertex.color=V(g2)$node.color,
      vertex.label.family="Arial Black",
@@ -1474,7 +1473,6 @@ g2 <- delete.edges(g, which(E(g)$n.near <10))
 de <- igraph::degree(g2)/2
 strength <- strength(g2, weights=E(g2)$n.near)/2
 
-edge_density(g2)
 
 # How social is each bat?
 network_summs <- data.frame(batID=V(g2)$name, n.bats.near=de, times.near.others=strength)
@@ -1554,7 +1552,7 @@ plot(g2,
      edge.width=E(g2)$n.near/3,
      edge.color=alpha("black", 0.4),
      main= "Bat trajectories: social foraging", 
-     #sub=paste0("Network density = ", round(edge_density(g),2)),
+     
      vertex.size=17,
      vertex.color=V(g2)$node.color,
      vertex.label.family="Arial Black",
