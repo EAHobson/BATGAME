@@ -1,5 +1,5 @@
 ---
-title: "Bat Game"
+title: "Lab Report: Bat Game"
 subtitle: "Using online games to learn about sociality, movement, and basic coding"
 author: "ADD YOUR NAME HERE"
 date: "`r format(Sys.time(), '%Y-%B-%d')`"
@@ -12,7 +12,8 @@ output:
     smooth_scroll: false
 ---
 
-```{r pressure, echo=FALSE, fig.cap="For more information, visit http://hobsonresearch.com/index.php/sociality-game/", out.width = '100%'}
+
+```{r logo, echo=FALSE, fig.cap="For more information, visit http://hobsonresearch.com/index.php/sociality-game/", out.width = '100%'}
 knitr::include_graphics("sociality.game.logo.png")
 ```
 
@@ -108,14 +109,17 @@ Load all packages: This section loads all necessary packages (and installs them 
 ```{r}
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(trajr, tidyverse, gridExtra, igraph, scales, stringr, grid, rmarkdown)
+```
 
-#load landmark locations
+
+Load landmark locations: We also load the landmarks data which we will use for plotting and for some of our distance analyses.
+```{r}
 landmarks <- read_csv("landmark_locations.csv") #this is a provided file
 
 ```
 
 ## **Q1: Importing data
-**What is the text "#load landmark locations" on line 118? Why is it green?**
+**What is the text "#load landmark locations" on line 116? Why is it a different color?**
 ```
 ADD YOUR ANSWER HERE
 ```
@@ -150,10 +154,10 @@ Play the game, then save your data as "explore.csv"
 The function "read_csv" is what we'll use to import and activate your data. You should see this file to the right of your screen in your file list. Make sure that the file name is exactly "explore" and saved as a .csv file. Any differences in spelling or capitalization will cause an error in importing your data.
 
 ```{r setup, warning=FALSE, class.output="scroll-250"}
-explore.locs <- read_csv("explore.csv") #this is uploaded by the students
+#explore.locs <- read_csv("explore.csv") #this is uploaded by the students
 
 #this is backup data in case student data won't run (just delete the "#" from the start of the line below)
-#explore.locs <- read_csv("example_explore.csv") 
+explore.locs <- read_csv("example_explore.csv") 
 
 
 #rename columns
@@ -240,10 +244,10 @@ Play the game, then save your data as "random.csv"
 
 Load data & process
 ```{r}
-rand.locs <- read_csv("random.csv") #this is uploaded by the students
+#rand.locs <- read_csv("random.csv") #this is uploaded by the students
 
 #this is backup data in case student data won't run (just delete the "#" from the start of the line below)
-#rand.locs <- read_csv("example_random.csv") 
+rand.locs <- read_csv("example_random.csv") 
 
 
 #rename cols
@@ -555,7 +559,7 @@ ggplot(unique.landmarks_cows, aes(x=batID, y=unique.visitsXtype,
 ```
 
 
-## ** Q10: Random movement foraging success **
+## ** Q10: Random movement foraging success
 
 **How many cows did you visit while foraging?**
 ```
@@ -602,10 +606,10 @@ Play the game, then save your data as "socforag.csv"
 
 Load data & process
 ```{r warning=FALSE}
-socfor.locs <- read_csv("socforag.csv") #this is uploaded by the students #SOCFORG.csv
+#socfor.locs <- read_csv("socforag.csv") #this is uploaded by the students #SOCFORG.csv
 
 #this is backup data in case student data won't run (just delete the "#" from the start of the line below)
-#socfor.locs <- read_csv("example_socforag.csv") 
+socfor.locs <- read_csv("example_socforag.csv") 
 
 #rename cols
 colnames(socfor.locs) <- c("times", "agent", "x", "y")
@@ -648,7 +652,7 @@ ggplot(socfor.locs, aes(x, y, group=1)) +
   facet_wrap(~ batID,ncol = 4)
 ```
 
-## ** Q11: Compare your trajectory to the NPC bats **
+## ** Q11: Compare your trajectory to the NPC bats
 **Now that you are not trying to move randomly, how does your trajectory compare to the NPC bats? Is it similar or different?**
 
 ```
@@ -788,7 +792,7 @@ gridExtra::grid.arrange(dist, straightness, dirchange, ncol=4,
 ```
 
 
-## ** Q12: Compare your movement summaries to the NPC bats **
+## ** Q12: Compare your movement summaries to the NPC bats
 **Now that you are not trying to move randomly, how do your movements compare to the NPC bats? How does the summary of your movements ("Player" points, in red) compare to the NPC bats? What aspects of your movements were similar or different compared to the programmed bats? For each measure, was your pattern higher or lower than the programmed bats?**  
 ```
 ADD YOUR ANSWER HERE
@@ -1137,7 +1141,7 @@ set.seed(42)
 plot(g2, 
      edge.width=E(g2)$n.near/3,
      edge.color=alpha("black", 0.4),
-     main= "Bat trajectories: social foraging", 
+     main= "Bat trajectories: thresholded social foraging (rare observations removed)", 
      #sub=paste0("Network density = ", round(edge_density(g),2)),
      vertex.size=17,
      vertex.color=V(g2)$node.color,
@@ -1300,10 +1304,10 @@ ADD YOUR ANSWER HERE
 
 Load data & process
 ```{r warning=FALSE}
-bet_hedge.locs <- read_csv("bethedge.csv") #this is uploaded by the students #SOCFORG.csv
+#bet_hedge.locs <- read_csv("bethedge.csv") #this is uploaded by the students #SOCFORG.csv
 
 #this is backup data in case student data won't run (just delete the "#" from the start of the line below)
-#bet_hedge.locs <- read_csv("example_bethedge.csv.csv") 
+bet_hedge.locs <- read_csv("example_bethedge.csv") 
 
 #rename cols
 colnames(bet_hedge.locs) <- c("times", "agent", "x", "y")
@@ -1723,42 +1727,46 @@ ADD YOUR ANSWER HERE
 
 # Final questions
 
+```{r socforg, echo=FALSE, fig.cap="For more information, visit http://hobsonresearch.com/index.php/sociality-game/", out.width = '100%'}
+knitr::include_graphics("socforag.scenarios.png")
+```
+
 ## ** Q23: Foraging rules & surviving as a bat
 **In the social foraging game, you had two "rules" you used to make your movement decisions: you wanted to find cows to forage on and you wanted to stay relatively close to your chosen "buddy". Real bats can use similar rules to structure their movements, or may do something different. What rules would you need in the following scenarios?**
 
-**Scenario 1: Preferred roostmates do not coordinate movements outside the roost while foraging.** 
+**Scenario A: Preferred roostmates do not coordinate movements outside the roost while foraging.** 
 
-**What rules should the player and the NPC bats follow in a game like Scenario 1?**
+**What rules should the player and the NPC bats follow in a game like Scenario A?**
 ```
 ADD YOUR ANSWER HERE
 ```
 
-**If you were a researcher in the field studying these bats, how could you tell whether bats were following Scenario 1? What would you look for? How would you tell which bats preferred each other?**
+**If you were a researcher in the field studying these bats, how could you tell whether bats were following Scenario A? What would you look for? How would you tell which bats preferred each other?**
 ```
 ADD YOUR ANSWER HERE
 ```
 
-**Scenario 2: Preferred roostmates coordinate their departures from the roost but avoid foraging with each other** 
+**Scenario B: Preferred roostmates coordinate their departures from the roost but avoid foraging with each other** 
 
-**What rules should the player and the NPC bats follow in a game like Scenario 2?**
+**What rules should the player and the NPC bats follow in a game like Scenario B?**
 ```
 ADD YOUR ANSWER HERE
 ```
 
-**If you were a researcher in the field studying these bats, how could you tell whether bats were following Scenario 2? What would you look for? How would you tell which bats preferred each other?**
+**If you were a researcher in the field studying these bats, how could you tell whether bats were following Scenario B? What would you look for? How would you tell which bats preferred each other?**
 ```
 ADD YOUR ANSWER HERE
 ```
 
-**Scenario 3: All roostmates depart and forage as a group.**
+**Scenario F: All roostmates depart and forage as a group.**
 
-**What rules should the player and the NPC bats follow in a game like Scenario 3?**
+**What rules should the player and the NPC bats follow in a game like Scenario F?**
 
 ```
 ADD YOUR ANSWER HERE
 ```
 
-**If you were a researcher in the field studying these bats, how could you tell whether bats were following Scenario 3? What would you look for? How would you tell which bats preferred each other?**
+**If you were a researcher in the field studying these bats, how could you tell whether bats were following Scenario F? What would you look for? How would you tell which bats preferred each other?**
 ```
 ADD YOUR ANSWER HERE
 ```
