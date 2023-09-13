@@ -155,7 +155,7 @@ The function "read_csv" is what we'll use to import and activate your data. You 
 
 ```{r}
 #explore.locs <- read_csv("explore.csv") #this is uploaded by the students
-explore.locs <- read_csv("example_explore.csv") #this is uploaded by the students
+explore.locs <- read_csv("explore.csv") #this is uploaded by the students
 
 
 #rename columns
@@ -242,7 +242,7 @@ Play the game, then save your data as "random.csv"
 
 Load data & process
 ```{r}
-rand.locs <- read_csv("example_random.csv") #this is uploaded by the students
+rand.locs <- read_csv("random.csv") #this is uploaded by the students
 
 
 #rename cols
@@ -604,7 +604,7 @@ Play the game, then save your data as "socforag.csv"
 
 Load data & process
 ```{r warning=FALSE}
-socfor.locs <- read_csv("example_socforag.csv") #this is uploaded by the students #SOCFORG.csv
+socfor.locs <- read_csv("socforag.csv") #this is uploaded by the students #SOCFORG.csv
 
 #rename cols
 colnames(socfor.locs) <- c("times", "agent", "x", "y")
@@ -1295,7 +1295,7 @@ ADD YOUR ANSWER HERE
 
 Load data & process
 ```{r warning=FALSE}
-bet_hedge.locs <- read_csv("example_bethedge.csv") #this is uploaded by the students #SOCFORG.csv
+bet_hedge.locs <- read_csv("bethedge.csv") #this is uploaded by the students #SOCFORG.csv
 
 
 #rename cols
