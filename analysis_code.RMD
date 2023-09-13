@@ -154,7 +154,6 @@ Play the game, then save your data as "explore.csv"
 The function "read_csv" is what we'll use to import and activate your data. You should see this file to the right of your screen in your file list. Make sure that the file name is exactly "explore" and saved as a .csv file. Any differences in spelling or capitalization will cause an error in importing your data.
 
 ```{r}
-#explore.locs <- read_csv("explore.csv") #this is uploaded by the students
 explore.locs <- read_csv("explore.csv") #this is uploaded by the students
 
 
