@@ -153,8 +153,9 @@ Play the game, then save your data as "explore.csv"
 
 The function "read_csv" is what we'll use to import and activate your data. You should see this file to the right of your screen in your file list. Make sure that the file name is exactly "explore" and saved as a .csv file. Any differences in spelling or capitalization will cause an error in importing your data.
 
-```{r setup, warning=FALSE, class.output="scroll-250"}
-explore.locs <- read_csv("explore.csv") #this is uploaded by the students
+```{r}
+#explore.locs <- read_csv("explore.csv") #this is uploaded by the students
+explore.locs <- read_csv("example_explore.csv") #this is uploaded by the students
 
 
 #rename columns
@@ -241,7 +242,7 @@ Play the game, then save your data as "random.csv"
 
 Load data & process
 ```{r}
-rand.locs <- read_csv("random.csv") #this is uploaded by the students
+rand.locs <- read_csv("example_random.csv") #this is uploaded by the students
 
 
 #rename cols
@@ -305,7 +306,7 @@ Loop to summarize trajectories measures for each bat
 trajectory.summary <- data.frame(batID=character(),
                                  distance=double(),
                                  straightness=double(),
-                                 sinosoidy=double(),
+                                 #sinosoidy=double(),
                                  mean.dirchange=double())
 # LOOP
 
@@ -331,6 +332,7 @@ for (bat in 1:length(ids)) { #bat=1
   
   #compile data & write
   loop.compiled <- cbind.data.frame(batID, 
+                                    distance,
                                     straightness, 
                                     mean.dirchange)
   
@@ -365,6 +367,25 @@ Plot the trajectory data: we'll plot each measure separately and then combine al
 
 For our purposes, you'll want to compare where your data (Player, in red) falls compared to the NPC bats, who are all plotted in red.
 ```{r fig2, fig.height = 5, fig.width = 8, fig.cap="Figure: Plot of summary measures of random movements when player goal is to also move randomly."}
+
+#straightness
+player.distance <- player$value[player$type.mm=="distance"]
+distance <- ggplot(NPCs[NPCs$type.mm=="distance",], aes(type.mm, value)) +
+  geom_boxplot(color="saddlebrown", fill="saddlebrown", alpha=0.2, outlier.shape = NA) +
+  geom_jitter(width = 0.3, size=5, pch=21, col="white", bg="saddlebrown") +
+  ylim(0,max(c(NPCs$value[NPCs$type.mm=="distance"]),player$value[player$type.mm=="distance"])) +
+  ggtitle("Distance") + 
+  ylab("Distance") +
+  geom_point(aes(y=player.straightn), col="black", bg="red", size=5, pch=23) +
+  theme(plot.title = element_text(hjust = 0.5),
+        axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        panel.background = element_blank(),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        axis.line = element_line(colour = "black"),
+        panel.border = element_rect(colour = "black", fill=NA, linewidth=0.5))
 
 
 #straightness
@@ -408,7 +429,7 @@ dirchange <- ggplot(NPCs[NPCs$type.mm=="mean.dirchange",], aes(type.mm, value)) 
 
 
 # plot all together to compare
-gridExtra::grid.arrange(straightness, dirchange, ncol=4,
+gridExtra::grid.arrange(distance, straightness, dirchange, ncol=3,
                         top=textGrob("Bat trajectories: random movement"))
 
 ```
@@ -583,7 +604,7 @@ Play the game, then save your data as "socforag.csv"
 
 Load data & process
 ```{r warning=FALSE}
-socfor.locs <- read_csv("socforag.csv") #this is uploaded by the students #SOCFORG.csv
+socfor.locs <- read_csv("example_socforag.csv") #this is uploaded by the students #SOCFORG.csv
 
 #rename cols
 colnames(socfor.locs) <- c("times", "agent", "x", "y")
@@ -641,6 +662,7 @@ Summarize all trajectories: we'll use the same method we used earlier to measure
 ```{r}
 #make empty dataframe to write trajectory summaries to
 trajectory.summary <- data.frame(batID=character(),
+                                 distance=double(),
                                  straightness=double(),
                                  mean.dirchange=double())
 # LOOP
@@ -661,12 +683,15 @@ for (bat in 1:length(ids)) { #bat=1
   #make trajectory & summarize
   trj <- trajr::TrajFromCoords(loop.data)
   #plot(trj)
+  distance    <- trajr::TrajDistance(trj)
+
   straightness    <- trajr::TrajStraightness(trj)
   mean.dirchange  <- mean(trajr::TrajDirectionalChange(trj))
   batID           <- loop.bat
   
   #compile data & write
   loop.compiled <- cbind.data.frame(batID, 
+                                    distance,
                                     straightness, 
                                     mean.dirchange)
   
@@ -693,6 +718,25 @@ player <- subset(melted_traj.summs, batID=="Player")
 
 Plot the trajectory data
 ```{r fig7, fig.height = 5, fig.width = 10}
+#distance
+player.distance <- player$value[player$type.mm=="distance"]
+distance <- ggplot(NPCs[NPCs$type.mm=="distance",], aes(type.mm, value)) +
+  geom_boxplot(color="saddlebrown", fill="saddlebrown", alpha=0.2, outlier.shape = NA) +
+  geom_jitter(width = 0.3, size=5, pch=21, col="white", bg="saddlebrown") +
+  ylim(0,max(c(NPCs$value[NPCs$type.mm=="distance"]),player$value[player$type.mm=="distance"])) +
+  ggtitle("Distance") + 
+  ylab("Distance") +
+  geom_point(aes(y=player.straightn), col="black", bg="red", size=5, pch=23) +
+  theme(plot.title = element_text(hjust = 0.5),
+        axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        panel.background = element_blank(),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        axis.line = element_line(colour = "black"),
+        panel.border = element_rect(colour = "black", fill=NA, linewidth=0.5))
+
 
 #straightness
 player.straightn <- player$value[player$type.mm=="straightness"]
@@ -735,7 +779,7 @@ dirchange <- ggplot(NPCs[NPCs$type.mm=="mean.dirchange",], aes(type.mm, value)) 
 
 
 # plot all together to compare
-gridExtra::grid.arrange(straightness, dirchange, ncol=4,
+gridExtra::grid.arrange(distance, straightness, dirchange, ncol=3,
                         top=textGrob("Bat trajectories: social preferences"))
 
 ```
@@ -1251,7 +1295,7 @@ ADD YOUR ANSWER HERE
 
 Load data & process
 ```{r warning=FALSE}
-bet_hedge.locs <- read_csv("bethedge.csv") #this is uploaded by the students #SOCFORG.csv
+bet_hedge.locs <- read_csv("example_bethedge.csv") #this is uploaded by the students #SOCFORG.csv
 
 
 #rename cols
@@ -1343,7 +1387,7 @@ ggplot(unique.landmarks_cows, aes(x=batID, y=unique.visitsXtype,
   geom_bar(stat="identity") +
   labs(x="Bats", 
        y="Number of cows found", 
-       title = "Bat trajectories: social foraging") +
+       title = "Bat trajectories: bet hedging") +
   ## add manual color scale
   scale_fill_manual("legend",         ###### in this call: colour change
                     values = c("Player" = "red", "NPC bats" = "saddlebrown")) +
@@ -1531,7 +1575,7 @@ plot_strength <- ggplot(NPCs.netsum, aes(5, times.near.others)) +
 
 # plot all together to compare
 gridExtra::grid.arrange(plot_degree, plot_strength, ncol=2,
-                        top=textGrob("Bat trajectories: social foraging"))
+                        top=textGrob("Bat trajectories: bet hedging"))
 ```
 
 ## ** Q21: Compare network metrics
@@ -1551,7 +1595,7 @@ set.seed(42)
 plot(g2, 
      edge.width=E(g2)$n.near/3,
      edge.color=alpha("black", 0.4),
-     main= "Bat trajectories: social foraging", 
+     main= "Bat trajectories: bet hedging", 
      
      vertex.size=17,
      vertex.color=V(g2)$node.color,
